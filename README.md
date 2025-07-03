@@ -1,1 +1,1 @@
-# scout-app
+# scout-note
