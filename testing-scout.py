@@ -5,6 +5,9 @@ import tempfile
 
 st.set_page_config(page_title="Scouting Rapports", layout="centered")
 
+# Ajout dans la sidebar pour choisir la version
+version = st.sidebar.radio("Choisir la version", options=["PC", "Mobile"])
+
 st.title("📝 Rapport de Scouting Football")
 
 # --- Infos joueur & observation ---
@@ -55,20 +58,29 @@ criteres_def = criteres_par_poste[poste]["Défensif"]
 
 # --- Notes et commentaires ---
 st.header(f"📝 Critères Offensifs et Défensifs pour {poste}")
-cols_off = st.columns(2)
+
+# Ajuster l'affichage en fonction de la version choisie
+if version == "PC":
+    cols_off = st.columns(2)
+    container_off = cols_off[0]
+    container_def = cols_off[1]
+else:  # version Mobile : on empile verticalement
+    container_off = st.container()
+    container_def = st.container()
+
 notes_off = {}
 comms_off = {}
 notes_def = {}
 comms_def = {}
 
-with cols_off[0]:
+with container_off:
     st.subheader("Offensif")
     for i, crit in enumerate(criteres_off):
         crit_mod = st.text_input(f"Critère Offensif #{i+1}", value=crit, key=f"off_crit_{i}")
         notes_off[crit_mod] = st.slider(f"Note - {crit_mod}", 0, 10, 5, key=f"off_note_{i}")
         comms_off[crit_mod] = st.text_area(f"Commentaire - {crit_mod}", height=80, key=f"off_comm_{i}")
 
-with cols_off[1]:
+with container_def:
     st.subheader("Défensif")
     for i, crit in enumerate(criteres_def):
         crit_mod = st.text_input(f"Critère Défensif #{i+1}", value=crit, key=f"def_crit_{i}")
